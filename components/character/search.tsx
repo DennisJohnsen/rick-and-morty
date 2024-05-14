@@ -10,15 +10,16 @@ export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
+    const debounce = setTimeout(() => {
       onSearch(searchTerm);
     }, 300); // Debounce delay in milliseconds
 
-    return () => clearTimeout(delayDebounceFn);
+    return () => clearTimeout(debounce);
   }, [searchTerm, onSearch]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+    console.log("HandleChange");
   };
 
   return (

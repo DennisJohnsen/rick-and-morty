@@ -1,52 +1,71 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ICharacter } from "./item";
 import { CharacterSearch } from "./search";
 
 export const CharacterList = () => {
-  const [characters, setCharacters] = useState<ICharacter[]>([]);
+  const [charactersData, setCharactersData] = useState<ICharacter[]>([]);
   const [nextPage, setNextPage] = useState<string>("");
-  const [isInit, setIsInit] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
-  const fetchData = async (url: string) => {
+  const fetchCharacters = async (searchValue?: string) => {
+    const url = `https://rickandmortyapi.com/api/character/${
+      searchValue ? `?name=${searchValue}` : ""
+    }`;
+
     try {
       const response = await fetch(url);
-      setIsLoading(true);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        if (response.status === 404) {
+          throw new Error("Resource not found");
+        } else {
+          throw new Error("Failed to fetch data");
+        }
       }
 
       const data = await response.json();
 
-      if (!isInit) {
-        setCharacters(data.results);
-        setIsInit(true);
+      if (data.results) {
+        return data.results;
       } else {
-        setCharacters((prevCharacters) => [...prevCharacters, ...data.results]);
+        return false;
       }
-
-      setNextPage(data.info.next);
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError(true);
-    } finally {
-      setIsLoading(false);
+      return false;
     }
   };
 
+  const handleSearch = useCallback(async (searchTerm: string) => {
+    console.log("test");
+
+    if (searchTerm) {
+      const searchData = await fetchCharacters(searchTerm);
+      console.log(searchData);
+
+      if (searchData) {
+        setCharactersData(searchData);
+      }
+    }
+  }, []);
+
   useEffect(() => {
-    fetchData("https://rickandmortyapi.com/api/character");
+    const fetchData = async () => {
+      const data = await fetchCharacters();
+      if (data) {
+        setCharactersData(data);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleLoadMore = () => {
-    if (nextPage) fetchData(nextPage);
+    // if (nextPage) fetchCharacters(nextPage);
   };
-
-  const handleSearch = (searchTerm: string) => {};
 
   return (
     <>
@@ -55,10 +74,10 @@ export const CharacterList = () => {
 
         <CharacterSearch onSearch={handleSearch} />
 
-        {characters.length > 0 && (
+        {charactersData && (
           <>
             <ul>
-              {characters.map((character) => (
+              {charactersData.map((character) => (
                 <li key={character.id}>
                   {character.id} - {character.name}
                 </li>
