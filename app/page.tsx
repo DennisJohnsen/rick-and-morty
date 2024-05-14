@@ -1,10 +1,12 @@
+import { CharacterSearch } from "@/components/character/search";
+import { CharacterList } from "@/components/character/list";
+
 import styles from "./page.module.scss";
-import { CharactersList } from "@/components/charactersList";
 
 export default function Home() {
   return (
-    <main className={styles.test}>
-      <CharactersList />
+    <main>
+      <CharacterList />
     </main>
   );
 }
