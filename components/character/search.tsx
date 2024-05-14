@@ -3,11 +3,15 @@
 import { useEffect, useState } from "react";
 
 interface CharacterSearchProps {
-  onSearch: (name: string) => void;
+  onSearch: (searchTerm: string) => void;
+  noResult: boolean;
 }
 
-export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
+export const CharacterSearch = ({
+  onSearch,
+  noResult,
+}: CharacterSearchProps) => {
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -15,19 +19,27 @@ export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
     }, 300); // Debounce delay in milliseconds
 
     return () => clearTimeout(debounce);
-  }, [searchTerm, onSearch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
-    console.log("HandleChange");
   };
 
   return (
-    <input
-      type="text"
-      placeholder="Search characters by name"
-      value={searchTerm}
-      onChange={handleChange}
-    />
+    <>
+      <input
+        type="text"
+        placeholder="Search characters by name"
+        value={searchTerm}
+        onChange={handleChange}
+      />
+
+      {noResult && (
+        <>
+          <p>No characters found</p>
+        </>
+      )}
+    </>
   );
 };

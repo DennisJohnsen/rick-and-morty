@@ -5,16 +5,14 @@ import { ICharacter } from "./item";
 import { CharacterSearch } from "./search";
 
 export const CharacterList = () => {
+  const baseUrl = `https://rickandmortyapi.com/api/character/`;
   const [charactersData, setCharactersData] = useState<ICharacter[]>([]);
   const [nextPage, setNextPage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
+  const [fetchError, setFetchError] = useState<boolean>(false);
+  const [searchError, setSearchError] = useState<boolean>(false);
 
-  const fetchCharacters = async (searchValue?: string) => {
-    const url = `https://rickandmortyapi.com/api/character/${
-      searchValue ? `?name=${searchValue}` : ""
-    }`;
-
+  const fetchCharacters = async (url: string) => {
     try {
       const response = await fetch(url);
 
@@ -28,43 +26,55 @@ export const CharacterList = () => {
 
       const data = await response.json();
 
-      if (data.results) {
-        return data.results;
+      if (data) {
+        return data;
       } else {
         return false;
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
       return false;
     }
   };
 
-  const handleSearch = useCallback(async (searchTerm: string) => {
-    console.log("test");
-
+  const handleSearch = async (searchTerm: string) => {
     if (searchTerm) {
-      const searchData = await fetchCharacters(searchTerm);
-      console.log(searchData);
+      const searchData = await fetchCharacters(baseUrl + `?name=${searchTerm}`);
 
       if (searchData) {
-        setCharactersData(searchData);
+        setCharactersData(searchData.results);
+        setNextPage(searchData.info.next);
+        setSearchError(false);
+      } else {
+        setSearchError(true);
       }
+    } else {
+      const searchData = await fetchCharacters(baseUrl);
+      setCharactersData(searchData.results);
+      setNextPage(searchData.info.next);
+      setSearchError(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchCharacters();
+      const data = await fetchCharacters(baseUrl);
+
       if (data) {
-        setCharactersData(data);
+        setCharactersData(data.results);
+        setNextPage(data.info.next);
       }
     };
 
     fetchData();
+    setIsLoading(false);
   }, []);
 
-  const handleLoadMore = () => {
-    // if (nextPage) fetchCharacters(nextPage);
+  const handleLoadMore = async () => {
+    if (nextPage) {
+      const nextData = await fetchCharacters(nextPage);
+      setCharactersData([...charactersData, ...nextData.results]);
+      setNextPage(nextData.info.next);
+    }
   };
 
   return (
@@ -72,7 +82,7 @@ export const CharacterList = () => {
       <div>
         <h1>Characters</h1>
 
-        <CharacterSearch onSearch={handleSearch} />
+        <CharacterSearch onSearch={handleSearch} noResult={searchError} />
 
         {charactersData && (
           <>
@@ -93,8 +103,6 @@ export const CharacterList = () => {
         )}
 
         {isLoading && <p>loading</p>}
-
-        {error && <p>Something went wrong, please try again later</p>}
       </div>
     </>
   );
