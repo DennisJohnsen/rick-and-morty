@@ -11,7 +11,6 @@ export const fetchCharacters = async (url: string) => {
     }
 
     const data = await response.json();
-    console.log(data.results);
 
     if (data) {
       return data;

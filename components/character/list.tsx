@@ -14,7 +14,7 @@ export const CharacterList = () => {
   // const [fetchError, setFetchError] = useState<boolean>(false); // Skipped on error handling
   const [searchError, setSearchError] = useState<boolean>(false);
 
-  // Search callback function that sets the new data based on the search term, but also for intial load as onChange is triggered on initial render
+  // Search callback function that sets the new data based on the search term
   const handleSearch = useCallback(
     async (searchTerm: string) => {
       if (searchTerm) {
@@ -35,11 +35,24 @@ export const CharacterList = () => {
         setNextPage(searchData.info.next);
         setSearchError(false);
       }
-
-      setIsLoading(false);
     },
     [baseUrl]
   );
+
+  // Setting inital data and loading state to false
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchCharacters(baseUrl);
+
+      if (data) {
+        setCharactersData(data.results);
+        setNextPage(data.info.next);
+      }
+    };
+
+    fetchData();
+    setIsLoading(false);
+  }, [baseUrl]);
 
   const handleLoadMore = async () => {
     if (nextPage) {
