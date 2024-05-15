@@ -39,6 +39,14 @@ export const CharacterList = () => {
     [baseUrl]
   );
 
+  const handleLoadMore = async () => {
+    if (nextPage) {
+      const nextData = await fetchCharacters(nextPage);
+      setCharactersData([...charactersData, ...nextData.results]);
+      setNextPage(nextData.info.next);
+    }
+  };
+
   // Setting inital data and loading state to false
   useEffect(() => {
     const fetchData = async () => {
@@ -53,14 +61,6 @@ export const CharacterList = () => {
     fetchData();
     setIsLoading(false);
   }, [baseUrl]);
-
-  const handleLoadMore = async () => {
-    if (nextPage) {
-      const nextData = await fetchCharacters(nextPage);
-      setCharactersData([...charactersData, ...nextData.results]);
-      setNextPage(nextData.info.next);
-    }
-  };
 
   return (
     <>

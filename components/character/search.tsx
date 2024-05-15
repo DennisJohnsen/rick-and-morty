@@ -7,8 +7,10 @@ interface CharacterSearchProps {
 }
 
 export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState<null | string>(null);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<null | string>(
+    null
+  );
 
   // Debounce method: https://dev.to/manishkc104/debounce-input-in-react-3726
   useEffect(() => {
@@ -20,7 +22,9 @@ export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
   }, [searchTerm]);
 
   useEffect(() => {
-    onSearch(debouncedSearchTerm);
+    if (typeof debouncedSearchTerm === "string") {
+      onSearch(debouncedSearchTerm);
+    }
   }, [debouncedSearchTerm, onSearch]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +36,7 @@ export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
       <input
         type="text"
         placeholder="Search characters by name"
-        value={searchTerm}
+        value={searchTerm ? `${searchTerm}` : ""}
         onChange={(e) => handleChange(e)}
       />
     </>
