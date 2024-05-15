@@ -76,32 +76,55 @@ export const CharacterList = () => {
       )}
 
       {charactersData && !searchError && (
-        <>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Status</th>
-                <th>Species</th>
-                <th>Current location</th>
-                <th>No. Episodes</th>
-              </tr>
-            </thead>
+        <div className="px-5">
+          <div className="relative overflow-x-auto">
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+              <thead className="font-bold text-gray-700 bg-gray-100">
+                <tr>
+                  <th scope="col" className="px-6 py-3 rounded-s-lg">
+                    Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Gender
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Status
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Species
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Current location
+                  </th>
+                  <th scope="col" className="px-6 py-3 rounded-e-lg">
+                    No. Episodes
+                  </th>
+                </tr>
+              </thead>
 
-            <tbody>
-              {charactersData.map((character) => (
-                <CharacterItem
-                  key={character.id}
-                  isOpen={character.id === openCharacter}
-                  characterData={character}
-                />
-              ))}
-            </tbody>
-          </table>
+              <tbody>
+                {charactersData.map((character) => (
+                  <CharacterItem
+                    key={character.id}
+                    isOpen={character.id === openCharacter}
+                    characterData={character}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-          {nextPage && <button onClick={handleLoadMore}>Load More</button>}
-        </>
+          {nextPage && (
+            <div className="flex justify-center py-7">
+              <button
+                className="text-gray-900 bg-white border border-gray-200 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-6 py-3.5"
+                onClick={handleLoadMore}
+              >
+                Load More
+              </button>
+            </div>
+          )}
+        </div>
       )}
 
       {isLoading && <p>loading</p>}

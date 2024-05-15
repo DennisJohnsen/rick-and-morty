@@ -30,13 +30,15 @@ export const CharacterItem = ({
   const character = characterData;
 
   return (
-    <tr>
-      <td>{character.name}</td>
-      <td>{character.gender}</td>
-      <td>{character.status}</td>
-      <td>{character.species}</td>
-      <td>{character.location.name}</td>
-      <td>{character.episode.length}</td>
+    <tr className="border-b border-gray-200 text-gray-900">
+      <td className="px-6 py-4 whitespace-nowrap">{character.name}</td>
+      <td className="px-6 py-4 whitespace-nowrap">{character.gender}</td>
+      <td className="px-6 py-4 whitespace-nowrap">{character.status}</td>
+      <td className="px-6 py-4 whitespace-nowrap">{character.species}</td>
+      <td className="px-6 py-4 whitespace-nowrap">{character.location.name}</td>
+      <td className="px-6 py-4 whitespace-nowrap">
+        {character.episode.length}
+      </td>
     </tr>
   );
 };
