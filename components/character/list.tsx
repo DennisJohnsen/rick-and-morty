@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ICharacter } from "./item";
 import { CharacterSearch } from "./search";
+import { fetchCharacters } from "@/utils/fetchCharacters";
 
 export const CharacterList = () => {
   const baseUrl = `https://rickandmortyapi.com/api/character/`;
@@ -12,30 +13,7 @@ export const CharacterList = () => {
   // const [fetchError, setFetchError] = useState<boolean>(false); // Skipped on error handling
   const [searchError, setSearchError] = useState<boolean>(false);
 
-  const fetchCharacters = async (url: string) => {
-    try {
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error("Resource not found");
-        } else {
-          throw new Error("Failed to fetch data");
-        }
-      }
-
-      const data = await response.json();
-
-      if (data) {
-        return data;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      return false;
-    }
-  };
-
+  // Search callback function that sets the new data based on the search term
   const handleSearch = useCallback(
     async (searchTerm: string) => {
       if (searchTerm) {
@@ -60,6 +38,7 @@ export const CharacterList = () => {
     [baseUrl]
   );
 
+  // Setting inital data and loading state to false
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchCharacters(baseUrl);
