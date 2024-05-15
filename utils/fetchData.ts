@@ -1,4 +1,4 @@
-export const fetchCharacters = async (url: string) => {
+export const fetchData = async (url: string) => {
   try {
     const response = await fetch(url);
 
@@ -11,7 +11,6 @@ export const fetchCharacters = async (url: string) => {
     }
 
     const data = await response.json();
-    console.log(data.results);
 
     if (data) {
       return data;

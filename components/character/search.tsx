@@ -7,29 +7,34 @@ interface CharacterSearchProps {
 }
 
 export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
-  const [searchTerm, setSearchTerm] = useState<null | string>(null);
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<null | string>(
-    null
-  );
+  const [searchTerm, setSearchTerm] = useState<undefined | string>(undefined);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<
+    undefined | string
+  >(undefined);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
   // Debounce method: https://dev.to/manishkc104/debounce-input-in-react-3726
   useEffect(() => {
     const debounce = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
+      if (searchTerm !== undefined) {
+        const encodedSearchTerm = encodeURIComponent(searchTerm);
+        setDebouncedSearchTerm(encodedSearchTerm);
+      }
     }, 400); // Debounce delay in milliseconds
 
     return () => clearTimeout(debounce);
   }, [searchTerm]);
 
   useEffect(() => {
+    // Check for userinput to avoid calling the API on intial load
+    // An empty input by the user will still be an empty string
     if (typeof debouncedSearchTerm === "string") {
       onSearch(debouncedSearchTerm);
     }
   }, [debouncedSearchTerm, onSearch]);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
 
   return (
     <>

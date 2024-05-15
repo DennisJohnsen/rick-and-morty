@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { ICharacter } from "./item";
+import { CharacterItem, ICharacter } from "./item";
 import { CharacterSearch } from "./search";
-import { fetchCharacters } from "@/utils/fetchCharacters";
+import { fetchData } from "@/utils/fetchData";
 
 export const CharacterList = () => {
   const baseUrl = `https://rickandmortyapi.com/api/character/`;
@@ -11,16 +11,17 @@ export const CharacterList = () => {
   const [charactersData, setCharactersData] = useState<ICharacter[]>([]);
   const [nextPage, setNextPage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [fetchError, setFetchError] = useState<boolean>(false); // Skipped on error handling
+  // const [fetchError, setFetchError] = useState<boolean>(false); // Skipped on error handling on Api errors for this demo
   const [searchError, setSearchError] = useState<boolean>(false);
+  const [openCharacter, setOpenCharacter] = useState<number | undefined>(
+    undefined
+  );
 
   // Search callback function that sets the new data based on the search term
   const handleSearch = useCallback(
     async (searchTerm: string) => {
       if (searchTerm) {
-        const searchData = await fetchCharacters(
-          baseUrl + `?name=${searchTerm}`
-        );
+        const searchData = await fetchData(baseUrl + `?name=${searchTerm}`);
 
         if (searchData) {
           setCharactersData(searchData.results);
@@ -30,7 +31,7 @@ export const CharacterList = () => {
           setSearchError(true);
         }
       } else {
-        const searchData = await fetchCharacters(baseUrl);
+        const searchData = await fetchData(baseUrl);
         setCharactersData(searchData.results);
         setNextPage(searchData.info.next);
         setSearchError(false);
@@ -41,7 +42,7 @@ export const CharacterList = () => {
 
   const handleLoadMore = async () => {
     if (nextPage) {
-      const nextData = await fetchCharacters(nextPage);
+      const nextData = await fetchData(nextPage);
       setCharactersData([...charactersData, ...nextData.results]);
       setNextPage(nextData.info.next);
     }
@@ -49,8 +50,8 @@ export const CharacterList = () => {
 
   // Setting inital data and loading state to false
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchCharacters(baseUrl);
+    const getInitialData = async () => {
+      const data = await fetchData(baseUrl);
 
       if (data) {
         setCharactersData(data.results);
@@ -58,7 +59,7 @@ export const CharacterList = () => {
       }
     };
 
-    fetchData();
+    getInitialData();
     setIsLoading(false);
   }, [baseUrl]);
 
@@ -90,14 +91,11 @@ export const CharacterList = () => {
 
             <tbody>
               {charactersData.map((character) => (
-                <tr key={character.id}>
-                  <td>{character.name}</td>
-                  <td>{character.gender}</td>
-                  <td>{character.status}</td>
-                  <td>{character.species}</td>
-                  <td>{character.location.name}</td>
-                  <td>{character.episode.length}</td>
-                </tr>
+                <CharacterItem
+                  key={character.id}
+                  isOpen={character.id === openCharacter}
+                  characterData={character}
+                />
               ))}
             </tbody>
           </table>
