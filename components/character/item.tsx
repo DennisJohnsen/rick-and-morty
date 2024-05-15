@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 export interface ICharacter {
   id: number;
   name: string;
@@ -31,14 +32,19 @@ export const CharacterItem = ({
 
   return (
     <tr className="border-b border-gray-200 text-gray-900">
-      <td className="px-6 py-4 whitespace-nowrap">{character.name}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{character.gender}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{character.status}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{character.species}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{character.location.name}</td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        {character.episode.length}
-      </td>
+      <th scope="row" className="flex items-center px-6 py-4">
+        <img
+          className="w-10 h-10 rounded-full bg-gray-200"
+          src={character.image}
+          alt={`Portrait of ${character.name}`}
+        />
+        <div className="ps-3">{character.name}</div>
+      </th>
+      <td className="px-6 py-4 capitalize">{character.gender}</td>
+      <td className="px-6 py-4 capitalize">{character.status}</td>
+      <td className="px-6 py-4">{character.species}</td>
+      <td className="px-6 py-4">{character.location.name}</td>
+      <td className="px-6 py-4">{character.episode.length}</td>
     </tr>
   );
 };

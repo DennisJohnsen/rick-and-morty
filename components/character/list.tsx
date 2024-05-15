@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { CharacterItem, ICharacter } from "./item";
 import { CharacterSearch } from "./search";
 import { fetchData } from "@/utils/fetchData";
+import { LargeLoading } from "@/components/shared/loading/large-loading";
 
 export const CharacterList = () => {
   const baseUrl = `https://rickandmortyapi.com/api/character/`;
@@ -60,62 +61,68 @@ export const CharacterList = () => {
     };
 
     getInitialData();
-    setIsLoading(false);
+
+    // Delay to show loading state, just for fun.
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   }, [baseUrl]);
 
   return (
     <>
-      <h1>Characters</h1>
-
-      <CharacterSearch onSearch={handleSearch} />
-
-      {searchError && (
+      {!isLoading && (
         <>
-          <p>No characters found</p>
-        </>
-      )}
-
-      {charactersData && !searchError && (
-        <div className="px-5">
           <div className="relative overflow-x-auto">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-              <thead className="font-bold text-gray-700 bg-gray-100">
-                <tr>
-                  <th scope="col" className="px-6 py-3 rounded-s-lg">
-                    Name
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Gender
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Status
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Species
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Current location
-                  </th>
-                  <th scope="col" className="px-6 py-3 rounded-e-lg">
-                    No. Episodes
-                  </th>
-                </tr>
-              </thead>
+            <div className="flex justify-center mb-5">
+              <CharacterSearch onSearch={handleSearch} />
+            </div>
 
-              <tbody>
-                {charactersData.map((character) => (
-                  <CharacterItem
-                    key={character.id}
-                    isOpen={character.id === openCharacter}
-                    characterData={character}
-                  />
-                ))}
-              </tbody>
-            </table>
+            {searchError && (
+              <>
+                <p>No characters found</p>
+              </>
+            )}
+
+            {!searchError && (
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead className="font-bold text-gray-700 bg-gray-100">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 rounded-s-lg w-3/12">
+                      Name
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      Gender
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      Status
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-1/12">
+                      Species
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-3/12">
+                      Current location
+                    </th>
+                    <th scope="col" className="px-6 py-3 rounded-e-lg w-1/12">
+                      No. Episodes
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {charactersData.map((character) => (
+                    <CharacterItem
+                      key={character.id}
+                      isOpen={character.id === openCharacter}
+                      characterData={character}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
 
           {nextPage && (
-            <div className="flex justify-center py-7">
+            <div className="flex justify-center  mt-5">
               <button
                 className="text-gray-900 bg-white border border-gray-200 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-6 py-3.5"
                 onClick={handleLoadMore}
@@ -124,10 +131,10 @@ export const CharacterList = () => {
               </button>
             </div>
           )}
-        </div>
+        </>
       )}
 
-      {isLoading && <p>loading</p>}
+      {isLoading && <LargeLoading />}
     </>
   );
 };
