@@ -4,23 +4,24 @@ import { useEffect, useState } from "react";
 
 interface CharacterSearchProps {
   onSearch: (searchTerm: string) => void;
-  noResult: boolean;
 }
 
-export const CharacterSearch = ({
-  onSearch,
-  noResult,
-}: CharacterSearchProps) => {
+export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
+  // Debounce method: https://dev.to/manishkc104/debounce-input-in-react-3726
   useEffect(() => {
     const debounce = setTimeout(() => {
-      onSearch(searchTerm);
-    }, 300); // Debounce delay in milliseconds
+      setDebouncedSearchTerm(searchTerm);
+    }, 400); // Debounce delay in milliseconds
 
     return () => clearTimeout(debounce);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
+
+  useEffect(() => {
+    onSearch(debouncedSearchTerm);
+  }, [debouncedSearchTerm, onSearch]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -34,12 +35,6 @@ export const CharacterSearch = ({
         value={searchTerm}
         onChange={handleChange}
       />
-
-      {noResult && (
-        <>
-          <p>No characters found</p>
-        </>
-      )}
     </>
   );
 };

@@ -9,7 +9,7 @@ export const CharacterList = () => {
   const [charactersData, setCharactersData] = useState<ICharacter[]>([]);
   const [nextPage, setNextPage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [fetchError, setFetchError] = useState<boolean>(false);
+  // const [fetchError, setFetchError] = useState<boolean>(false); // Skipped on error handling
   const [searchError, setSearchError] = useState<boolean>(false);
 
   const fetchCharacters = async (url: string) => {
@@ -36,24 +36,29 @@ export const CharacterList = () => {
     }
   };
 
-  const handleSearch = async (searchTerm: string) => {
-    if (searchTerm) {
-      const searchData = await fetchCharacters(baseUrl + `?name=${searchTerm}`);
+  const handleSearch = useCallback(
+    async (searchTerm: string) => {
+      if (searchTerm) {
+        const searchData = await fetchCharacters(
+          baseUrl + `?name=${searchTerm}`
+        );
 
-      if (searchData) {
+        if (searchData) {
+          setCharactersData(searchData.results);
+          setNextPage(searchData.info.next);
+          setSearchError(false);
+        } else {
+          setSearchError(true);
+        }
+      } else {
+        const searchData = await fetchCharacters(baseUrl);
         setCharactersData(searchData.results);
         setNextPage(searchData.info.next);
         setSearchError(false);
-      } else {
-        setSearchError(true);
       }
-    } else {
-      const searchData = await fetchCharacters(baseUrl);
-      setCharactersData(searchData.results);
-      setNextPage(searchData.info.next);
-      setSearchError(false);
-    }
-  };
+    },
+    [baseUrl]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +72,7 @@ export const CharacterList = () => {
 
     fetchData();
     setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLoadMore = async () => {
@@ -79,31 +85,49 @@ export const CharacterList = () => {
 
   return (
     <>
-      <div>
-        <h1>Characters</h1>
+      <h1>Characters</h1>
 
-        <CharacterSearch onSearch={handleSearch} noResult={searchError} />
+      <CharacterSearch onSearch={handleSearch} />
 
-        {charactersData && (
-          <>
-            <ul>
+      {searchError && (
+        <>
+          <p>No characters found</p>
+        </>
+      )}
+
+      {charactersData && !searchError && (
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Status</th>
+                <th>Species</th>
+                <th>Current location</th>
+                <th>No. Episodes</th>
+              </tr>
+            </thead>
+
+            <tbody>
               {charactersData.map((character) => (
-                <li key={character.id}>
-                  {character.id} - {character.name}
-                </li>
+                <tr key={character.id}>
+                  <td>{character.name}</td>
+                  <td>{character.gender}</td>
+                  <td>{character.status}</td>
+                  <td>{character.species}</td>
+                  <td>{character.location.name}</td>
+                  <td>{character.episode.length}</td>
+                </tr>
               ))}
-            </ul>
+            </tbody>
+          </table>
 
-            {nextPage && (
-              <div>
-                <button onClick={handleLoadMore}>Load More</button>
-              </div>
-            )}
-          </>
-        )}
+          {nextPage && <button onClick={handleLoadMore}>Load More</button>}
+        </>
+      )}
 
-        {isLoading && <p>loading</p>}
-      </div>
+      {isLoading && <p>loading</p>}
     </>
   );
 };
