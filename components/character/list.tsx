@@ -7,13 +7,14 @@ import { fetchCharacters } from "@/utils/fetchCharacters";
 
 export const CharacterList = () => {
   const baseUrl = `https://rickandmortyapi.com/api/character/`;
+
   const [charactersData, setCharactersData] = useState<ICharacter[]>([]);
   const [nextPage, setNextPage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [fetchError, setFetchError] = useState<boolean>(false); // Skipped on error handling
   const [searchError, setSearchError] = useState<boolean>(false);
 
-  // Search callback function that sets the new data based on the search term
+  // Search callback function that sets the new data based on the search term, but also for intial load as onChange is triggered on initial render
   const handleSearch = useCallback(
     async (searchTerm: string) => {
       if (searchTerm) {
@@ -34,25 +35,11 @@ export const CharacterList = () => {
         setNextPage(searchData.info.next);
         setSearchError(false);
       }
+
+      setIsLoading(false);
     },
     [baseUrl]
   );
-
-  // Setting inital data and loading state to false
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchCharacters(baseUrl);
-
-      if (data) {
-        setCharactersData(data.results);
-        setNextPage(data.info.next);
-      }
-    };
-
-    fetchData();
-    setIsLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleLoadMore = async () => {
     if (nextPage) {

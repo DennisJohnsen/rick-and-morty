@@ -33,7 +33,7 @@ export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
         type="text"
         placeholder="Search characters by name"
         value={searchTerm}
-        onChange={handleChange}
+        onChange={(e) => handleChange(e)}
       />
     </>
   );
