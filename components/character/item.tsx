@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 /* eslint-disable @next/next/no-img-element */
 export interface ICharacter {
   id: number;
@@ -22,6 +24,7 @@ export interface ICharacter {
 export interface CharacterItemProps {
   characterData: ICharacter; // Assuming ICharacter is the correct type for characterData
   isOpen: boolean;
+  onOpen: () => void;
 }
 
 export const CharacterItem = ({
@@ -31,14 +34,14 @@ export const CharacterItem = ({
   const character = characterData;
 
   return (
-    <tr className="border-b border-gray-200 text-gray-900">
+    <tr className="border-b border-gray-200 text-gray-900 hover:bg-gray-50 cursor-pointer">
       <th scope="row" className="flex items-center px-6 py-4">
         <img
           className="w-10 h-10 rounded-full bg-gray-200"
           src={character.image}
           alt={`Portrait of ${character.name}`}
         />
-        <div className="ps-3">{character.name}</div>
+        <div className="pl-3">{character.name}</div>
       </th>
       <td className="px-6 py-4 capitalize">{character.gender}</td>
       <td className="px-6 py-4 capitalize">{character.status}</td>

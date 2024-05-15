@@ -7,7 +7,7 @@ export const LargeLoading = () => {
       className={`flex justify-center items-center h-svh w-svw fixed inset-0  ${styles.backdrop}`}
     >
       <Image
-        src={`/largeLoading.gif`}
+        src={`/rick-dancing.gif`}
         alt="Rick dancing"
         width="259"
         height="498"

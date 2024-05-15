@@ -42,7 +42,7 @@ export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
         Search
       </label>
 
-      <div className="relative mt-1">
+      <div className="relative">
         <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
           <svg
             className="w-4 h-4 text-gray-700"
@@ -67,7 +67,7 @@ export const CharacterSearch = ({ onSearch }: CharacterSearchProps) => {
           value={searchTerm ? `${searchTerm}` : ""}
           onChange={(e) => handleChange(e)}
           id="table-search"
-          className="block py-2 ps-10 pr-2 text-sm text-gray-900 border border-gray-200 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+          className="block py-2 ps-10 pr-2 text-sm text-gray-900 border border-gray-200 rounded-lg w-80 bg-gray-50"
         />
       </div>
     </>

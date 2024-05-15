@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="flex justify-center">
       <div className="max-w-screen-lg w-full px-5 py-10">
-        <div className="flex flex-col items-center mb-12">
+        <div className="flex flex-col items-center mb-20">
           <Image
             src={`/rick-and-morty-logo.png`}
             alt="Rick dancing"
@@ -16,7 +16,7 @@ export default function Home() {
             className="max-w-lg mb-3"
           />
 
-          <h1>Database of all Rick and Morty characters</h1>
+          <h1 className="font-bold">List of all Rick and Morty characters</h1>
         </div>
 
         <CharacterList />

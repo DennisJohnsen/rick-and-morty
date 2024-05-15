@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { CharacterItem, ICharacter } from "./item";
 import { CharacterSearch } from "./search";
@@ -49,6 +50,8 @@ export const CharacterList = () => {
     }
   };
 
+  const handleOpenCharacter = (id: number) => {};
+
   // Setting inital data and loading state to false
   useEffect(() => {
     const getInitialData = async () => {
@@ -73,14 +76,27 @@ export const CharacterList = () => {
       {!isLoading && (
         <>
           <div className="relative overflow-x-auto">
-            <div className="flex justify-center mb-5">
+            <div className="flex justify-end mb-5">
               <CharacterSearch onSearch={handleSearch} />
             </div>
 
             {searchError && (
-              <>
-                <p>No characters found</p>
-              </>
+              <div className="flex flex-col justify-between">
+                <div
+                  className="px-6 py-3 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 font-bold"
+                  role="alert"
+                >
+                  No characters found!
+                </div>
+
+                <Image
+                  src={`/no-results.png`}
+                  alt="Mr. Meeseeks"
+                  width="579"
+                  height="638"
+                  className="self-center w-60 fixed bottom-0 mr-12"
+                />
+              </div>
             )}
 
             {!searchError && (
@@ -103,7 +119,7 @@ export const CharacterList = () => {
                       Current location
                     </th>
                     <th scope="col" className="px-6 py-3 rounded-e-lg w-1/12">
-                      No. Episodes
+                      Episodes
                     </th>
                   </tr>
                 </thead>
@@ -114,6 +130,7 @@ export const CharacterList = () => {
                       key={character.id}
                       isOpen={character.id === openCharacter}
                       characterData={character}
+                      onOpen={handleOpenCharacter}
                     />
                   ))}
                 </tbody>
@@ -121,10 +138,10 @@ export const CharacterList = () => {
             )}
           </div>
 
-          {nextPage && (
+          {nextPage && !searchError && (
             <div className="flex justify-center  mt-5">
               <button
-                className="text-gray-900 bg-white border border-gray-200 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-6 py-3.5"
+                className="text-gray-900 bg-white border border-gray-200 focus:outline-none hover:bg-gray-100 focus:ring-2 focus:ring-gray-900 font-medium rounded-full text-sm px-6 py-3.5"
                 onClick={handleLoadMore}
               >
                 Load More
