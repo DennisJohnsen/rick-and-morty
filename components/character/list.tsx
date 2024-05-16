@@ -38,6 +38,8 @@ export const CharacterList = () => {
         setNextPage(searchData.info.next);
         setSearchError(false);
       }
+
+      setOpenCharacter(undefined);
     },
     [baseUrl]
   );
@@ -50,7 +52,13 @@ export const CharacterList = () => {
     }
   };
 
-  const handleOpenCharacter = (id: number) => {};
+  const handleOpenCharacter = (id: number) => {
+    if (openCharacter !== id) {
+      setOpenCharacter(id);
+    } else {
+      setOpenCharacter(undefined);
+    }
+  };
 
   // Setting inital data and loading state to false
   useEffect(() => {
@@ -75,33 +83,33 @@ export const CharacterList = () => {
     <>
       {!isLoading && (
         <>
-          <div className="relative overflow-x-auto">
-            <div className="flex justify-end mb-5">
-              <CharacterSearch onSearch={handleSearch} />
-            </div>
+          <div className="flex justify-end mb-5">
+            <CharacterSearch onSearch={handleSearch} />
+          </div>
 
-            {searchError && (
-              <div className="flex flex-col justify-between">
-                <div
-                  className="px-6 py-3 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 font-bold"
-                  role="alert"
-                >
-                  No characters found!
-                </div>
-
-                <Image
-                  src={`/no-results.png`}
-                  alt="Mr. Meeseeks"
-                  width="579"
-                  height="638"
-                  className="self-center w-60 fixed bottom-0 mr-12"
-                />
+          {searchError && (
+            <div className="flex flex-col justify-between">
+              <div
+                className="px-6 py-3 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 font-bold"
+                role="alert"
+              >
+                No characters found
               </div>
-            )}
 
-            {!searchError && (
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                <thead className="font-bold text-gray-700 bg-gray-100">
+              <Image
+                src={`/no-results.png`}
+                alt="Mr. Meeseeks"
+                width="579"
+                height="638"
+                className="self-center w-60 fixed bottom-0 mr-12"
+              />
+            </div>
+          )}
+
+          {!searchError && (
+            <div className="relative overflow-x-auto">
+              <table className="w-full text-sm text-left rtl:text-right">
+                <thead className="bg-gray-200">
                   <tr>
                     <th scope="col" className="px-6 py-3 rounded-s-lg w-3/12">
                       Name
@@ -130,13 +138,13 @@ export const CharacterList = () => {
                       key={character.id}
                       isOpen={character.id === openCharacter}
                       characterData={character}
-                      onOpen={handleOpenCharacter}
+                      onOpen={() => handleOpenCharacter(character.id)}
                     />
                   ))}
                 </tbody>
               </table>
-            )}
-          </div>
+            </div>
+          )}
 
           {nextPage && !searchError && (
             <div className="flex justify-center  mt-5">

@@ -16,7 +16,9 @@ export default function Home() {
             className="max-w-lg mb-3"
           />
 
-          <h1 className="font-bold">List of all Rick and Morty characters</h1>
+          <h1 className="font-light text-xl text-center">
+            List of all Rick and Morty characters
+          </h1>
         </div>
 
         <CharacterList />
