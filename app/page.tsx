@@ -1,9 +1,9 @@
-import { CharacterSearch } from "@/components/character/search";
 import { CharacterList } from "@/components/character/characters-list";
 import Image from "next/image";
 
 export default function Home() {
-  const scale = 4;
+  const imgScale = 4;
+
   return (
     <div className="flex justify-center">
       <div className="max-w-screen-lg w-full px-5 py-10">
@@ -11,9 +11,9 @@ export default function Home() {
           <Image
             src={`/rick-and-morty-logo.png`}
             alt="Rick dancing"
-            width={3274 / scale}
-            height={1000 / scale}
-            className="max-w-lg mb-3"
+            width={3274 / imgScale}
+            height={1000 / imgScale}
+            className="max-w-full w-2/3 md:w-1/2 mb-3"
           />
 
           <h1 className="font-light text-xl text-center">

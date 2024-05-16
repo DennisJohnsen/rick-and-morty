@@ -76,8 +76,8 @@ export const CharacterItem = ({
       {isOpen && (
         <tr className="border-b bg-gray-50 h-40">
           <td colSpan={6} className="p-6 pt-0">
-            <div className="flex gap-6 items-start">
-              <div className="flex w-1/2">
+            <div className="flex flex-col md:flex-row gap-6 items-stretch md:items-start">
+              <div className="flex md:w-1/2">
                 <img
                   className="w-1/3 aspect-portrait rounded-s-lg bg-gray-300 object-cover"
                   src={character.image}
@@ -102,7 +102,7 @@ export const CharacterItem = ({
                 </div>
               </div>
 
-              <div className="flex w-1/2">
+              <div className="flex md:w-1/2">
                 <CharacterEpisodes episodes={character.episode} />
               </div>
             </div>

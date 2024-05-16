@@ -83,7 +83,7 @@ export const CharacterList = () => {
     <>
       {!isLoading && (
         <>
-          <div className="flex justify-end mb-5">
+          <div className="flex justify-center md:justify-end mb-5">
             <CharacterSearch onSearch={handleSearch} />
           </div>
 
