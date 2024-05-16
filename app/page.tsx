@@ -1,5 +1,5 @@
 import { CharacterSearch } from "@/components/character/search";
-import { CharacterList } from "@/components/character/list";
+import { CharacterList } from "@/components/character/characters-list";
 import Image from "next/image";
 
 export default function Home() {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import CharacterEpisodes from "./episodes";
 
 /* eslint-disable @next/next/no-img-element */
 export interface ICharacter {
@@ -19,6 +19,7 @@ export interface ICharacter {
   image: string;
   episode: string[];
   url: string;
+  created: string;
 }
 
 export interface CharacterItemProps {
@@ -65,9 +66,11 @@ export const CharacterItem = ({
         </th>
         <td className="px-6 py-4 capitalize">{character.gender}</td>
         <td className="px-6 py-4 capitalize">{character.status}</td>
-        <td className="px-6 py-4">{character.species}</td>
-        <td className="px-6 py-4">{character.location.name}</td>
-        <td className="px-6 py-4">{character.episode.length}</td>
+        <td className="px-6 py-4 capitalize">{character.species}</td>
+        <td className="px-6 py-4 capitalize">{character.location.name}</td>
+        <td className="px-6 py-4 pr-12 font-mono text-right">
+          {character.episode.length}
+        </td>
       </tr>
 
       {isOpen && (
@@ -76,7 +79,7 @@ export const CharacterItem = ({
             <div className="flex gap-6 items-start">
               <div className="flex w-1/2">
                 <img
-                  className="w-2/5 aspect-portrait rounded-s-lg bg-gray-300 object-cover"
+                  className="w-1/3 aspect-portrait rounded-s-lg bg-gray-300 object-cover"
                   src={character.image}
                   alt={`Thumbnail of ${character.name}`}
                 />
@@ -86,16 +89,8 @@ export const CharacterItem = ({
 
                   <table className="w-full text- text-left rtl:text-right relative">
                     <tbody>
-                      <TableRow
-                        label="Gender"
-                        text={character.gender}
-                        capitalize={true}
-                      />
-                      <TableRow
-                        label="Status"
-                        text={character.status}
-                        capitalize={true}
-                      />
+                      <TableRow label="Gender" text={character.gender} />
+                      <TableRow label="Status" text={character.status} />
                       <TableRow label="Species" text={character.species} />
                       <TableRow label="Origin" text={character.origin.name} />
                       <TableRow
@@ -107,38 +102,8 @@ export const CharacterItem = ({
                 </div>
               </div>
 
-              <div className="flex flex-col justify-start items-start p-6 bg-white rounded-lg grow">
-                <h3 className="font-bold text-lg mb-2">Appears in</h3>
-
-                <table className="w-full text- text-left rtl:text-right relative">
-                  <thead className="bg-gray-200">
-                    <tr>
-                      <th
-                        className="py-1 px-3 align-top rounded-s-lg"
-                        scope="col"
-                      >
-                        Name
-                      </th>
-                      <th className="py-1 px-3 align-top" scope="col">
-                        Season
-                      </th>
-                      <th
-                        className="py-1 px-3 align-top rounded-e-lg"
-                        scope="col"
-                      >
-                        Episode
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    <EpisodeRowProps
-                      name="Something Something Darkside"
-                      season={1}
-                      episode={2}
-                    />
-                  </tbody>
-                </table>
+              <div className="flex w-1/2">
+                <CharacterEpisodes episodes={character.episode} />
               </div>
             </div>
           </td>
@@ -157,28 +122,10 @@ interface DetailsRowProps {
 const TableRow = ({ label, text, capitalize = false }: DetailsRowProps) => {
   return (
     <tr>
-      <th className="py-1 pr-3 align-top" scope="row">
+      <th className="py-1 pr-3 align-top whitespace-nowrap" scope="row">
         {label}
       </th>
-      <td className={`py-1 pr-3 align-top ${capitalize ? "capitalize" : ""}`}>
-        {text}
-      </td>
-    </tr>
-  );
-};
-
-interface EpisodeRowProps {
-  name: string;
-  season: number;
-  episode: number;
-}
-
-const EpisodeRowProps = ({ name, season, episode }: EpisodeRowProps) => {
-  return (
-    <tr>
-      <td className="py-1 px-3 align-top">{name}</td>
-      <td className="py-1 px-3 align-top">{season}</td>
-      <td className="py-1 px-3 align-top">{episode}</td>
+      <td className={`py-1 pr-3 align-top capitalize w-11/12`}>{text}</td>
     </tr>
   );
 };

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { CharacterItem, ICharacter } from "./item";
+import { CharacterItem, ICharacter } from "./character";
 import { CharacterSearch } from "./search";
 import { fetchData } from "@/utils/fetchData";
 import { LargeLoading } from "@/components/shared/loading/large-loading";
@@ -147,7 +147,7 @@ export const CharacterList = () => {
           )}
 
           {nextPage && !searchError && (
-            <div className="flex justify-center  mt-5">
+            <div className="flex justify-center mt-5">
               <button
                 className="text-gray-900 bg-white border border-gray-200 focus:outline-none hover:bg-gray-100 focus:ring-2 focus:ring-gray-900 font-medium rounded-full text-sm px-6 py-3.5"
                 onClick={handleLoadMore}
